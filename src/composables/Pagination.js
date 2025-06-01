@@ -4,19 +4,20 @@ import { Loading } from 'quasar'
 
 export default function Pagination(api, initialParams = {}) {
   const rows = ref([])
-  const filter = ref('')
+  const codigoUasg = ref('')
+  const numeroPregao = ref('')
   const lastPage = ref(1)
   const url = ref(initialParams.url || '')
 
   const pagination = ref({
     sortBy: initialParams.sortBy,
-    descending: initialParams.descending,
+    descending: initialParams.descending ?? false,
     page: 1,
     rowsPerPage: 10,
     rowsNumber: 0,
   })
 
-  const fetchData = async (extraParams) => {
+  const fetchData = async () => {
     
 
     const { page, rowsPerPage, sortBy, descending } = pagination.value
@@ -30,8 +31,8 @@ export default function Pagination(api, initialParams = {}) {
           per_page: rowsPerPage,
           sortBy,
           descending: descending ? 'desc' : 'asc',
-          search: filter.value,
-          ...extraParams
+          codigo_uasg: codigoUasg.value,
+          numero_pregao: numeroPregao.value,
         }
       })
       rows.value = response.data.data
@@ -45,9 +46,9 @@ export default function Pagination(api, initialParams = {}) {
     }
   }
 
-  const onRequest = (params, extraParams) => {
+  const onRequest = (params) => {
     pagination.value = { ...pagination.value, ...params.pagination }
-    fetchData(extraParams)
+    fetchData()
   }
 
   const onFilterChange = () => {
@@ -57,7 +58,8 @@ export default function Pagination(api, initialParams = {}) {
 
   return {
     rows,
-    filter,
+    codigoUasg,
+    numeroPregao,
     pagination,
     lastPage,
     fetchData,
