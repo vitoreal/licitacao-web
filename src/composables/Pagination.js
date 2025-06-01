@@ -36,6 +36,7 @@ export default function Pagination(api, initialParams = {}) {
         }
       })
       rows.value = response.data.data
+      console.log(rows.value);
       lastPage.value = response.data.last_page
       pagination.value.rowsNumber = response.data.total // ESSENCIAL para a paginação funcionar corretamente
     } catch (err) {

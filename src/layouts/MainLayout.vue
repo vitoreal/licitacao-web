@@ -53,7 +53,7 @@ const linksList = [
   {
     title: 'Licitação',
     caption: '',
-    icon: 'school',
+    icon: 'public',
     link: '/'
   }
 ]

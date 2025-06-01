@@ -4,7 +4,7 @@
 
     <q-toolbar class="bg-secondary text-white">
       <q-avatar>
-        <q-icon name="category" size="md" />
+        <q-icon name="public" size="md" />
       </q-avatar>
       <q-toolbar-title>
        Lista de licitações
@@ -79,6 +79,15 @@
 						/>
 					</div>
 				</template>
+
+				<template v-slot:body-cell-visualizada="props">
+				<q-td :props="props">
+					<q-checkbox
+					v-model="props.row.visualizada"
+					@update:model-value="val => marcarComoVisualizado(props.row.id, val)"
+					/>
+				</q-td>
+				</template>
 			</q-table>
 		</div>
 	</q-page>
@@ -88,15 +97,15 @@
 <script setup>
 
 import { api } from 'src/boot/axios';
-//import { useQuasar } from 'quasar';
+import { Loading } from 'quasar';
 import { computed, onMounted } from 'vue';
-//import mensagemNotify from 'src/composables/MensagemNotify';
+import mensagemNotify from 'src/composables/MensagemNotify';
 import Pagination from 'src/composables/Pagination';
 
-//const mensagem = mensagemNotify();
-//const q$ = useQuasar();
+const mensagem = mensagemNotify();
 
 const columns = computed(() => [
+	{ name: 'visualizada', label: '✔️', field: 'visualizada', align: 'center' },
 	{ name: 'id', label: 'Id', field: 'id', align: 'left', },
 	{ name: 'codigo_uasg', label: 'Código UASG', field: 'codigo_uasg', align: 'left', },
 	{ name: 'numero_pregao', label: 'Pregão', field: 'numero_pregao', align: 'left', },
@@ -110,6 +119,26 @@ const columns = computed(() => [
   descending: false,
   url: 'licitacao',
 })
+
+async function marcarComoVisualizado(id, visualizada) {
+  try {
+    Loading.show()
+	const response = await api.put(`licitacao/${id}/visualizada`, { visualizada })
+
+	// Atualiza a linha manualmente se necessário:
+    const row = rows.value.find(r => r.id === id);
+    if (row) row.visualizada = response.data.data;
+	Loading.hide()
+    mensagem.mensagemPositive(response.data.message);
+
+  } catch (error) {
+		const response = error.response;
+		mensagem.mensagemNegative(response?.data?.message || 'Erro inexperado!');
+		Loading.hide()
+	} finally {
+		Loading.hide();
+	}
+}
 
 onMounted(() => {
 	onRequest({ pagination: pagination.value });
