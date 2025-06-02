@@ -56,18 +56,18 @@
 						</q-input>
 						</div>
 					</div>
-					</template>
+				</template>
 
-					<template v-slot:body-cell-objeto="props">
-  <q-td :props="props">
-    <span>
-      {{ props.row.objeto.slice(0, 60) }}<span v-if="props.row.objeto.length > 60">...</span>
-    </span>
-    <q-tooltip>
-      {{ props.row.objeto }}
-    </q-tooltip>
-  </q-td>
-</template>
+				<template v-slot:body-cell-objeto="props">
+					<q-td :props="props">
+						<span>
+						{{ props.row.objeto.slice(0, 60) }}<span v-if="props.row.objeto.length > 60">...</span>
+						</span>
+						<q-tooltip>
+						{{ props.row.objeto }}
+						</q-tooltip>
+					</q-td>
+				</template>
 
 				<template v-slot:bottom>
 					<div class="row q-pt-sm col-12 justify-end">
